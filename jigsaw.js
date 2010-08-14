@@ -77,6 +77,16 @@ function init(evt) {
 	initDrag('p', pieces);
 };
 
+//
+// hv -- either 'h' for a bottom or top side or 'v'
+// vh -- either 'v' or 'h'
+// len -- total length of the side (width or height of the piece). May be -ve.
+// bwh -- width or height of the bump (in the direction along the side). Same sign as len.
+// bhw -- height or width of the bump (in the direction perpendicular to the side). May be -ve.
+function bump(hv, vh, len, bwh, bhw) {
+    return [hv + 0.5 * (len - bwh), vh + bhw, hv + bwh, vh + -bhw, hv + 0.5 * (len - bwh)];
+}
+
 function mkPieces(u, imWd, imHt, nh, nv) {	
     var wd = imWd / nh;
     var ht = imHt / nv;
@@ -87,15 +97,48 @@ function mkPieces(u, imWd, imHt, nh, nv) {
 	var dht = piecesElt.ownerSVGElement.height.animVal.value;
 	var fracWd = 1 / nh;
 	var fracHt = 1 / nv;
+	
+	
+    var hash = function (i, j) {
+        return ((i * 37) ^ (j * 1009)) % 17;
+    }
+
+	
 	for (var i = 0; i < nh; ++i) {
 	    for (var j = 0; j < nv; ++j) {
 		    var id = String.fromCharCode(97 + i) + String.fromCharCode(97 + j);
 		    
 		    // Create path.
 		    var ds = ['M0,0'];
-		    ds.push('h' + wd);
-		    ds.push('v' + ht);
-		    ds.push('h' + -wd);
+		    if (j == 0) {
+		        ds.push('h' + wd);
+	        } else if (hash(i, j) & 1) {
+	            ds.splice(ds.length, 0, bump('h', 'v', wd, 0.2 * wd, 0.1 * ht));
+	        } else {
+	            ds.splice(ds.length, 0, bump('h', 'v', wd, 0.2 * wd, -0.1 * ht));
+		    }
+		    if (i == nh - 1) {
+		        ds.push('v' + ht);
+	        } else if (hash(i + 1, j) & 2) {
+	            ds.splice(ds.length, 0, bump('v', 'h', ht, 0.2 * ht, 0.1 * wd));
+	        } else {
+	            ds.splice(ds.length, 0, bump('v', 'h', ht, 0.2 * ht, -0.1 * wd));
+		    }
+		    if (j == nv - 1) {
+		        ds.push('h' + -wd);
+	        } else if (hash(i, j + 1) & 1) {
+	            ds.splice(ds.length, 0, bump('h', 'v', -wd, -0.2 * wd, 0.1 * ht));
+	        } else {
+	            ds.splice(ds.length, 0, bump('h', 'v', -wd, -0.2 * wd, -0.1 * ht));
+		    }
+		    if (i == 0) {
+		        ds.push('v' + -ht);
+	        } else if (hash(i, j) & 2) {
+	            ds.splice(ds.length, 0, bump('v', 'h', -ht, -0.2 * ht, 0.1 * wd));
+	        } else {
+	            ds.splice(ds.length, 0, bump('v', 'h', -ht, -0.2 * ht, -0.1 * wd));
+		    }
+		    
 		    ds.push('z');
 		    d = ds.join(' ');
 		    
@@ -124,6 +167,8 @@ function mkPieces(u, imWd, imHt, nh, nv) {
 	        // Random starting position.
 		    var x = Math.random() * (dwd - wd);
 		    var y = Math.random() * (dht - ht);
+		    x = i * wd * 1.15;
+		    y = j * ht * 1.15;
 		    
 		    // Create image with clip path.
 		    var pieceElt = subelt(piecesElt, 'g', {
