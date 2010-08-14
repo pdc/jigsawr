@@ -98,15 +98,11 @@ function mkPieces(u, imWd, imHt, nh, nv) {
 		    ds.push('h' + -wd);
 		    ds.push('z');
 		    d = ds.join(' ');
-		    /*
-		    clipPathElt = subelt(defsElt, 'clipPath', {
-		        id: 'c' + id, 
-		        clipPathUnits: 'objectBoundingBox'
-		    })
-		    subelt(clipPathElt, 'path', {d: d})
-		    */
 		    
-		    // Create pattern. This is my 2nd attempt to place an image in a shape.
+		    // Create pattern. 
+		    // The image is added using a pattern (a) so that it does
+		    // not expand the bbox of the piece, and (b) because
+		    // images are independently draggable in Safari
 		    var patternElt = subelt(defsElt, 'pattern', {
 		        id: 'p' + id,
 		        patternUnits: 'userSpaceOnUse',
@@ -124,8 +120,7 @@ function mkPieces(u, imWd, imHt, nh, nv) {
 		        width: imWd,
 		        height: imHt
 	        });
-		    
-		    
+	        
 	        // Random starting position.
 		    var x = Math.random() * (dwd - wd);
 		    var y = Math.random() * (dht - ht);
@@ -143,14 +138,6 @@ function mkPieces(u, imWd, imHt, nh, nv) {
 	            fill: 'url(#p' + id + ')'
 	        })
 	        
-	        /*
-	        
-	        pieceElt = subelt(piecesElt, 'rect', {
-	            id: 'r' + id,
-	            width: wd,
-	            height: ht
-            });\
-            */
             pieceElt.ownerPiece = {elts: {id: pieceElt}};
 		    pieces.push(pieceElt.ownerPiece);
 	    }
