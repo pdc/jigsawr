@@ -158,11 +158,11 @@ function mkPieceElts(u, imWd, imHt, nh, nv) {
 		    var x = Math.random() * (dwd - wd);
 		    var y = Math.random() * (dht - ht);
 		    
-		    /*
-		    // Non-random starting points to see that the hunks fit.
-		    x = i * wd * 1.15;
-		    y = j * ht * 1.15;
-		    */
+		    if ((i ^ j) & 1) {
+    		    // Non-random starting points to see that the hunks fit.
+    		    x = i * wd + 50;
+    		    y = j * ht + 40;
+		    }
 		    
 		    // Create image with clip path.
 		    var pieceElt = subelt(hunksElt, 'g', {
@@ -203,23 +203,25 @@ function mkPieceElts(u, imWd, imHt, nh, nv) {
 	return pieceElts;
 }
 
+function getPt(elt) {
+    var m = elt.getCTM();
+    return {x: m.e, y: m.f};
+}
+
 function initDrag(bgElt, pieceElts) {
     bgElt = getElt(bgElt);
+    
+    var hunks = [];
+    for (var i in pieceElts) {
+        hunks.push(pieceElts[i].hunk = {i: i, elts: [pieceElts[i]]});
+    }
+    
     var isDrag = false;
     var dragHunk = null;
     var dragStartX = null;
     var dragStartY = null;
     var startX = null;
     var startY = null;
-    
-    
-    var hunks = [];
-    for (var i in pieceElts) {
-        hunks.push(pieceElts[i].hunk = {elts: [pieceElts[i]]});
-    }
-
-    // SVGPoint to keep track of the offset of the dragging session
-    var dragOffset = rootElt.createSVGPoint();
 
     bgElt.addEventListener('mousemove', function (evt) {
         if (isDrag) {
@@ -230,58 +232,51 @@ function initDrag(bgElt, pieceElts) {
                 var e = dragHunk.elts[j];
                 var t = 'translate(' + (e.startX + shiftX) + ',' + (e.startY + shiftY) + ')';
                 e.setAttribute('transform', t);
-            
-                log(e.getAttribute('id') + ': shift=' + shiftX + ',' + shiftY 
-                    + '; pos=' + t);
             }
         }
     }, false);
     bgElt.addEventListener('mouseup', function (evt) {
         if (isDrag) {
-            // resets the pointer-events
-            /*
-            dragElt.style.setProperty('pointer-events', 'all');
-            bgElt.style.setProperty('pointer-events', 'none');
-            */
-            
-            // Is it close enough to a piece to snap together?
-            var snaps = [];
-            var checkedElts = {};
-            for (var i in dragHunk.elts) {
-                var e = dragHunk.elts[i];
-                var m = e.getCTM();
-                var dragX = m.e;
-                var dragY = m.f;
-                for (var j in e.adjs) {
-                    var adj = e.adjs[j];
-                    if (adj.elt.hunk == dragHunk || checkedElts[adj.elt]) {
-                        continue;
+            // Is thus chunk close enough to other chunks to snap together?
+            for (var i = 0; i < dragHunk.elts.length; ++i) {
+                var dragElt = dragHunk.elts[i];
+                var dragPt = getPt(dragElt);
+                
+                // Check each adjacent piece to this one.
+                for (var j in dragElt.adjs) {
+                    var adj = dragElt.adjs[j];
+                    if (adj.elt.hunk != dragHunk) { // Must be in a different hunk.
+                        var adjPt = getPt(adj.elt);
+                        if (adj.dx) {
+                            adjPt.x -= adj.dx;
+                        }
+                        if (adj.dy) {
+                            adjPt.y -= adj.dy;
+                        }
+                        var dSquared = Math.pow(dragPt.x - adjPt.x, 2) + Math.pow(dragPt.y - adjPt.y, 2);
+                        if (dSquared < 25) { // Must be close to the dragged piece.
+                            log('snap');
+                            
+                            // Adjust the position of the dragged piece to close the gap.
+                            var dx = adjPt.x - dragPt.x;
+                            var dy = adjPt.y - dragPt.y;
+                            for (var k in dragHunk.elts) {
+                                var ee = dragHunk.elts[k];
+                                var pt = getPt(ee);
+                                var t = 'translate(' + (pt.x + dx) + ',' + (pt.y + dy) + ')';
+                                ee.setAttribute('transform', t);
+                            }
+                            dragPt = getPt(dragElt);
+                            
+                            // Attach the elements of the absorbed chunk to this one.
+                            var absorbedElts = adj.elt.hunk.elts;
+                            dragHunk.elts = dragHunk.elts.concat(absorbedElts);
+                            for (var k in absorbedElts) {
+                                absorbedElts[k].hunk = dragHunk;
+                            }
+                        }
                     }
-                    var m = adj.elt.getCTM();
-                    var otherX = m.e - (adj.dx || 0);
-                    var otherY = m.f - (adj.dy || 0);
-                    var dSquared = Math.pow(dragX - otherX, 2) + Math.pow(dragY - otherY, 2);
-                    log('dragX,Y=' + dragX + ',' + dragY + '; otherX,Y=' + otherX + ',' + otherY
-                        + '; dSquared=' + dSquared);
-                    if (dSquared < 25) {
-                        log('snap');
-                        snaps.push({elts: adj.elt.hunk.elts, dx: otherX - dragX, dy: otherY - dragY});
-                        checkedElts[adj.elt] = true;
-                    }
                 }
-            }
-            for (var i in snaps) {
-                var snap = snaps[i];
-                for (var k in dragHunk.elts) {
-                    var e = dragHunk.elts[k]
-                    var m = e.getCTM();
-                    var t = 'translate(' + (m.e + snap.dx) + ',' + (m.f + snap.dy) + ')';
-                    e.setAttribute('transform', t);
-                }
-                for (var k in snap.elts) {
-                    snap.elts[k].hunk = dragHunk;
-                }
-                dragHunk.elts = dragHunk.elts.concat(snap.elts);
             }
             log('Hunk size: ' + dragHunk.elts.length);
             
