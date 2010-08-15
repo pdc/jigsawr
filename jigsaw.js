@@ -43,9 +43,7 @@ var logMax = 600 / 16;
 function log(text) {
     if (logTspans == null) {
         logElt = subelt(getElt('bg'), 'text', {
-            'font-height': logLineHt,
-            x: 0,
-            y: logLineHt
+            'font-height': logLineHt + 'px'
         });
         logTspans = [];
     }
@@ -53,12 +51,12 @@ function log(text) {
         var e = logTspans.shift();
         logElt.removeChild(e);
         for (var i in logTspans) {
-            logTspans[i].setAttribute('y', (i - 0) * logLineHt);
+            logTspans[i].setAttribute('y', (1 + i) * logLineHt);
         }
     }
     var newElt = subelt(logElt, 'tspan', {
         x: 0,
-        y: logTspans.length * logLineHt
+        y: (1 + logTspans.length) * logLineHt
     });
     newElt.appendChild(doc.createTextNode(text));
     logTspans.push(newElt);
@@ -302,7 +300,24 @@ function init(evt) {
 	doc = evt.target.ownerDocument;
 	rootElt = doc.documentElement;
 	
-	u = 'http://farm5.static.flickr.com/4077/4871527376_35120786b3_z.jpg';
-	var pieceElts = mkPieceElts(u, 640, 512, 8, 7);
+	var s = location.search;
+	var args = {
+	    u: 'http://farm5.static.flickr.com/4077/4871527376_35120786b3_z.jpg',
+	    wd: 640,
+	    ht: 512,
+	    nh: 8,
+	    nv: 7
+	};
+	if (s) {
+	    var ps = s.slice(1).split('&');
+	    for (var i in ps) {
+	        var pos = ps[i].indexOf('=');
+	        var k = ps[i].slice(0, pos);
+	        var v = ps[i].slice(pos + 1)
+	        args[k] = v;
+        }
+	}
+	
+	var pieceElts = mkPieceElts(args.u, args.wd, args.ht, args.nh, args.nv);
 	mkJigsaw('p', pieceElts);
 };
