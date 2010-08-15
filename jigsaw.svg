@@ -23,5 +23,5 @@
     	    <rect width="980" height="600" fill="#789" stroke="#000" stroke-width="2" />
         </g>
     </g>
-	<script xlink:href="jigsaw.js"/>
+	<script xlink:href="jigsaw.js" type="application/javascript"/>
 </svg>
