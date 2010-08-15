@@ -19,7 +19,7 @@ function mk(n, atts) {
     if (atts) {
         for (var i in atts) {
             if (i == 'href') {
-                e.setAttributeNS(XLINK, 'href', atts[i])
+                e.setAttributeNS(XLINK, 'href', atts[i]);
             } else {
                 e.setAttribute(i, atts[i]);
             }

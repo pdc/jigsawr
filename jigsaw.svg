@@ -5,7 +5,7 @@
      version="1.1"
      onload="init(evt)">
 
-	<title>Experiments in dividing an image in to bits</title>
+	<title>Jigsaw</title>
 	<desc>Damian Cugley, 2010-08-10</desc>
 	<defs id="defs">
 	    <style type="text/css">
