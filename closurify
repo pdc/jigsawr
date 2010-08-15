@@ -1,0 +1,79 @@
+#!/usr/bin/env python
+# encoding: utf-8
+"""
+closurify.py
+
+Created by Damian Cugley on 2010-08-15.
+Copyright (c) 2010 __MyCompanyName__. All rights reserved.
+"""
+
+import sys
+import os
+import httplib2, urllib
+
+
+help_message = '''
+The help message goes here.
+'''
+
+endpoint = 'http://closure-compiler.appspot.com/compile'
+compilation_levels = ['WHITESPACE_ONLY', 'SIMPLE_OPTIMIZATIONS', 'ADVANCED_OPTIMIZATIONS']
+output_infos = ['compiled_code', 'warnings', 'errors', 'statistics']
+output_formats = ['text', 'json', 'xml']
+
+def closurify(js_file, compilation_level=None, output_info=None, output_format=None):
+    print '( %s' % js_file,
+    http = httplib2.Http(os.path.expanduser('~/Library/httplib2'))
+    params = {
+        'js_code': open(js_file, 'rb').read(),
+        'output_info': output_info or 'compiled_code',
+    }
+    if compilation_level and compilation_level != 'SIMPLE_OPTIMIZATIONS':
+        params['compilation_level'] = level
+    if output_format and outpout_format != 'text':
+        params['output_format'] = output_format
+    data = urllib.urlencode(params)
+    response, body = http.request(endpoint, 'POST', data, {
+        'Content-type': 'application/x-www-form-urlencoded',        
+    })
+    print ')'
+    c_js_file = js_file
+    if js_file[-3:] == '.js':
+        c_js_file = js_file[:-3] + '.c.js'
+    with open(c_js_file, 'wt') as output:
+        output.write(body)
+    print 'Wrote JavaScript to', c_js_file
+
+class Usage(Exception):
+    def __init__(self, msg):
+        self.msg = msg
+
+
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv
+    try:
+        try:
+            opts, args = getopt.getopt(argv[1:], "hv", ["help",'verbose'])
+        except getopt.error, msg:
+            raise Usage(msg)
+    
+        # option processing
+        for option, value in opts:
+            if option in ['-v', '--verbose']:
+                verbose = True
+            elif option in ("-h", "--help"):
+                raise Usage(help_message)
+                
+        for arg in args:
+            closurify(arg)
+    
+    except Usage, err:
+        print >> sys.stderr, sys.argv[0].split("/")[-1] + ": " + str(err.msg)
+        print >> sys.stderr, "\t for help use --help"
+        return 2
+
+
+if __name__ == "__main__":
+    import getopt
+    sys.exit(main())
