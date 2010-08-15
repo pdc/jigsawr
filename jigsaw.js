@@ -89,6 +89,15 @@ function mkPieceElts(u, imWd, imHt, nh, nv) {
     var hash = function (i, j) {
         return ((i * 37) ^ (j * 1009)) % 17;
     }
+    
+    var symbolElt = subelt(defsElt, 'symbol', {
+        id: 'im',
+    })
+    var imageElt = subelt(symbolElt, 'image', {
+        href: u, 
+        width: imWd,
+        height: imHt
+    });
 	
 	var pieceEltss = []; // 2-d array of hunks
 	var pieceElts = []; // simple list of hunks
@@ -136,13 +145,9 @@ function mkPieceElts(u, imWd, imHt, nh, nv) {
 		        width: imWd,
 		        height: imHt		        
 		    });
-		    var imageElt = subelt(patternElt, 'image', {
-		        href: u, 
-		        x: 0,
-		        y: 0,
-		        width: imWd,
-		        height: imHt
-	        });
+		    var useElt = subelt(patternElt, 'use', {
+		        href: '#im'
+		    })
 	        
 	        // Random starting position.
 		    var x = Math.random() * (dwd - wd);
