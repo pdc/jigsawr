@@ -199,7 +199,7 @@ function mkPieceElts(u, imWd, imHt, nh, nv) {
 		    var x = Math.random() * (dwd - wd);
 		    var y = Math.random() * (dht - ht);
 		    
-		    if (true|| (i ^ j) & 1) {
+		    if (false &&  (i ^ j) & 1) {
     		    // Non-random starting points to see that the hunks fit.
     		    x = i * wd * 1.2 + 50;
     		    y = j * ht * 1.2 + 40;
