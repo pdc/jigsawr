@@ -66,6 +66,52 @@ function log(text) {
 // Application specific
 //
 
+
+// Create the path for one bump on a jigsaw piece.
+// sideHt -- total length of the side (height of the piece). May be -ve.
+// isIn -- whether the bump turns intwards or points outwards
+function hBump(sideWd, isIn) {
+    var bwd = Math.round(0.4 * sideWd);
+    var bht = Math.round(0.1 * sideWd) * (!!isIn ^ (sideWd < 0) ? -1 : 1);
+    var cht = 0.5 * bht;
+    var cwd = cht * ((sideWd < 0) != (cht < 0) ? -1 : 1);
+    return [
+        'h' + (0.5 * (sideWd - bwd)), 
+        'q' + cwd + ',0 ' + cwd + ',' + cht,
+        't' + -cwd + ',' + cht,
+        -cwd + ',' + cht,
+        (cwd + 0.5 * bwd) + ',' + cht,
+        (cwd + 0.5 * bwd) + ',' + -cht,
+        -cwd + ',' + -cht,
+        -cwd + ',' + -cht,
+        cwd + ',' + -cht,
+        'h' + (0.5 * (sideWd - bwd))
+    ];
+}
+
+// Create the path for one bump on a jigsaw piece.
+// sideHt -- total length of the side (height of the piece). May be -ve.
+// isIn -- whether the bump turns intwards or points outwards
+function vBump(sideHt, isIn) {
+    var bht = Math.round(0.4 * sideHt);
+    var bwd = Math.round(0.1 * sideHt) * (!!isIn ^ (sideHt < 0) ? -1 : 1);
+    var cwd = 0.5 * bwd;
+    var cht = cwd * ((sideHt < 0) != (cwd < 0) ? -1 : 1);
+    return [
+        'v' + (0.5 * (sideHt - bht)), 
+        'q0,' + cht + ' ' + cwd + ',' + cht,
+        't' + cwd + ',' + -cht,
+        cwd + ',' + -cht,
+        cwd + ',' + (cht + 0.5 * bht),
+        -cwd + ',' + (cht + 0.5 * bht),
+        -cwd + ',' + -cht,
+        -cwd + ',' + -cht,
+        -cwd + ',' + cht,
+        'v' + (0.5 * (sideHt - bht))
+    ];
+}
+
+
 // Create the path for one bump on a jigsaw piece.
 // hv -- either 'h' for a bottom or top side or 'v'
 // vh -- either 'v' or 'h'
@@ -111,22 +157,22 @@ function mkPieceElts(u, imWd, imHt, nh, nv) {
 		    if (j == 0) {
 		        ds.push('h' + wd);
 	        } else {
-	            ds.splice(ds.length, 0, bump('h', 'v', wd, hash(i, j) & 1));
+	            ds.splice(ds.length, 0, hBump(wd, hash(i, j) & 1));
 		    }
 		    if (i == nh - 1) {
 		        ds.push('v' + ht);
 	        } else {
-	            ds.splice(ds.length, 0, bump('v', 'h', ht, hash(i + 1, j) & 2));
+	            ds.splice(ds.length, 0, vBump(ht, hash(i + 1, j) & 2));
 		    }
 		    if (j == nv - 1) {
 		        ds.push('h' + -wd);
 	        } else {
-	            ds.splice(ds.length, 0, bump('h', 'v', -wd, hash(i, j + 1) & 1));
+	            ds.splice(ds.length, 0, hBump(-wd, hash(i, j + 1) & 1));
 		    }
 		    if (i == 0) {
 		        ds.push('v' + -ht);
 	        } else {
-	            ds.splice(ds.length, 0, bump('v', 'h', -ht, hash(i, j) & 2));
+	            ds.splice(ds.length, 0, vBump(-ht, hash(i, j) & 2));
 		    }
 		    ds.push('z');
 		    d = ds.join(' ');
@@ -153,7 +199,7 @@ function mkPieceElts(u, imWd, imHt, nh, nv) {
 		    var x = Math.random() * (dwd - wd);
 		    var y = Math.random() * (dht - ht);
 		    
-		    if (false && (i ^ j) & 1) {
+		    if (true|| (i ^ j) & 1) {
     		    // Non-random starting points to see that the hunks fit.
     		    x = i * wd * 1.2 + 50;
     		    y = j * ht * 1.2 + 40;
