@@ -290,6 +290,7 @@ function mkJigsaw(bgElt, pieceElts) {
                     var m = e.getCTM();
                     e.startX = m.e;
                     e.startY = m.f;
+                    e.parentNode.appendChild(e);
                 }
             }, false);
         }
