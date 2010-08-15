@@ -8,9 +8,15 @@
 	<title>Experiments in dividing an image in to bits</title>
 	<desc>Damian Cugley, 2010-08-10</desc>
 	<defs id="defs">
-	    <pattern id="im">
-	        <image xlink:href="im.jpg" x="0" y="0" width="640" height="427" />
-        </pattern>
+	    <style type="text/css">
+	        #p path {
+    	        stroke-width: 0.5px;
+    	        stroke: #CCC;
+	        }
+	        #p path:hover {
+    	        stroke-width: 2px;
+	        }
+        </style>
 	</defs>
 	<g id="p">
     	<g id="bg">

@@ -68,13 +68,14 @@ function log(text) {
 // Application specific
 //
 
-//
+// Create the path for one bump on a jigsaw piece.
 // hv -- either 'h' for a bottom or top side or 'v'
 // vh -- either 'v' or 'h'
 // len -- total length of the side (width or height of the piece). May be -ve.
-// bwh -- width or height of the bump (in the direction along the side). Same sign as len.
-// bhw -- height or width of the bump (in the direction perpendicular to the side). May be -ve.
-function bump(hv, vh, len, bwh, bhw) {
+// isIn -- whether the bump turns intwards or points outwards
+function bump(hv, vh, len, isIn) {
+    var bwh = 0.2 * len;
+    var bhw = 0.1 * len * (!!isIn ^ (len < 0) ? -1 : 1);
     return [hv + 0.5 * (len - bwh), vh + bhw, hv + bwh, vh + -bhw, hv + 0.5 * (len - bwh)];
 }
 
@@ -102,33 +103,24 @@ function mkPieceElts(u, imWd, imHt, nh, nv) {
 		    var ds = ['M0,0'];
 		    if (j == 0) {
 		        ds.push('h' + wd);
-	        } else if (hash(i, j) & 1) {
-	            ds.splice(ds.length, 0, bump('h', 'v', wd, 0.2 * wd, 0.1 * ht));
 	        } else {
-	            ds.splice(ds.length, 0, bump('h', 'v', wd, 0.2 * wd, -0.1 * ht));
+	            ds.splice(ds.length, 0, bump('h', 'v', wd, hash(i, j) & 1));
 		    }
 		    if (i == nh - 1) {
 		        ds.push('v' + ht);
-	        } else if (hash(i + 1, j) & 2) {
-	            ds.splice(ds.length, 0, bump('v', 'h', ht, 0.2 * ht, 0.1 * wd));
 	        } else {
-	            ds.splice(ds.length, 0, bump('v', 'h', ht, 0.2 * ht, -0.1 * wd));
+	            ds.splice(ds.length, 0, bump('v', 'h', ht, hash(i + 1, j) & 2));
 		    }
 		    if (j == nv - 1) {
 		        ds.push('h' + -wd);
-	        } else if (hash(i, j + 1) & 1) {
-	            ds.splice(ds.length, 0, bump('h', 'v', -wd, -0.2 * wd, 0.1 * ht));
 	        } else {
-	            ds.splice(ds.length, 0, bump('h', 'v', -wd, -0.2 * wd, -0.1 * ht));
+	            ds.splice(ds.length, 0, bump('h', 'v', -wd, hash(i, j + 1) & 1));
 		    }
 		    if (i == 0) {
 		        ds.push('v' + -ht);
-	        } else if (hash(i, j) & 2) {
-	            ds.splice(ds.length, 0, bump('v', 'h', -ht, -0.2 * ht, 0.1 * wd));
 	        } else {
-	            ds.splice(ds.length, 0, bump('v', 'h', -ht, -0.2 * ht, -0.1 * wd));
+	            ds.splice(ds.length, 0, bump('v', 'h', -ht, hash(i, j) & 2));
 		    }
-		    
 		    ds.push('z');
 		    d = ds.join(' ');
 		    
@@ -158,10 +150,10 @@ function mkPieceElts(u, imWd, imHt, nh, nv) {
 		    var x = Math.random() * (dwd - wd);
 		    var y = Math.random() * (dht - ht);
 		    
-		    if ((i ^ j) & 1) {
+		    if (false && (i ^ j) & 1) {
     		    // Non-random starting points to see that the hunks fit.
-    		    x = i * wd + 50;
-    		    y = j * ht + 40;
+    		    x = i * wd * 1.2 + 50;
+    		    y = j * ht * 1.2 + 40;
 		    }
 		    
 		    // Create image with clip path.
@@ -172,8 +164,6 @@ function mkPieceElts(u, imWd, imHt, nh, nv) {
 		    
 	        var pathElt = subelt(pieceElt, 'path', {
 	            d: d,
-	            stroke: '#CCC',
-	            'stroke-width': 1,
 	            fill: 'url(#p' + id + ')'
 	        })
 	        
@@ -189,13 +179,13 @@ function mkPieceElts(u, imWd, imHt, nh, nv) {
 	            pieceEltss[i][j].adjs.push({elt: pieceEltss[i - 1][j], dx: -wd});
             }
             if (i + 1 < nh) {
-	            pieceEltss[i][j].adjs.push({elt: pieceEltss[i + 1][j], dx: +wd});
+	            pieceEltss[i][j].adjs.push({elt: pieceEltss[i + 1][j], dx: wd});
             }
             if (j > 0) {
 	            pieceEltss[i][j].adjs.push({elt: pieceEltss[i][j - 1], dy: -ht});
             }
             if (j + 1 < nv) {
-	            pieceEltss[i][j].adjs.push({elt: pieceEltss[i][j + 1], dy: +ht});
+	            pieceEltss[i][j].adjs.push({elt: pieceEltss[i][j + 1], dy: ht});
             }
 	    }
 	}
@@ -208,7 +198,7 @@ function getPt(elt) {
     return {x: m.e, y: m.f};
 }
 
-function initDrag(bgElt, pieceElts) {
+function mkJigsaw(bgElt, pieceElts) {
     bgElt = getElt(bgElt);
     
     var hunks = [];
@@ -301,12 +291,6 @@ function initDrag(bgElt, pieceElts) {
                     e.startX = m.e;
                     e.startY = m.f;
                 }
-            
-                /*
-                // sets the new pointer-events
-                dragElt.style.setProperty('pointer-events', 'none');
-                bgElt.style.setProperty('pointer-events', 'all');
-                */
             }, false);
         }
     }
@@ -317,6 +301,7 @@ function init(evt) {
 	doc = evt.target.ownerDocument;
 	rootElt = doc.documentElement;
 	
-	var pieceElts = mkPieceElts('im.jpg', 640, 427, 6, 4);
-	initDrag('p', pieceElts);
+	u = 'http://farm5.static.flickr.com/4077/4871527376_35120786b3_z.jpg';
+	var pieceElts = mkPieceElts(u, 640, 512, 8, 7);
+	mkJigsaw('p', pieceElts);
 };
