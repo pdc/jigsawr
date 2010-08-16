@@ -364,7 +364,7 @@ function init(evt) {
 	    for (var i in ps) {
 	        var pos = ps[i].indexOf('=');
 	        var k = ps[i].slice(0, pos);
-	        var v = ps[i].slice(pos + 1)
+	        var v = unescape(ps[i].slice(pos + 1));
 	        args[k] = v;
         }
 	}

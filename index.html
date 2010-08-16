@@ -1,17 +1,28 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
-   "http://www.w3.org/TR/html4/strict.dtd">
-
-<html lang="en">
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>index</title>
-	<meta name="generator" content="TextMate http://macromates.com/">
-	<meta name="author" content="Damian Cugley">
-	<!-- Date: 2010-08-15 -->
-</head>
-<body>
-    <h1>Jigsaw</h1>
-    
-    <embed src="jigsaw.svg" type="image/svg+xml" width="980" height="600" />
-</body>
+<!DOCTYPE html>
+    <html lang="en">
+        <head>
+        	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        	<title>Jigsaw</title>
+        	<meta name="author" content="Damian Cugley">
+        	<!-- Date: 2010-08-15 -->
+        </head>
+        <body>
+            <h1>Jigsaw</h1>
+            <form id="f">
+                <label for="u">Picture URL:</label>
+                <input name="u" id="u">
+                <select name="d" id="d">
+                    <option value="120">Hard</option>
+                    <option value="60">Medium</option>
+                    <option value="24">Easy</option>
+                    <option value="9">Very easy</option>
+                    <option value="1">Too easy</option>
+                </select>
+                <input type="submit" value="Jigsaw!">
+            </form>
+            <script type="text/javascript" src="http://ajax.microsoft.com/ajax/jquery/jquery-1.4.2.min.js"></script>
+            <script type="text/javascript" src="index.js"></script>
+            
+            <div id="x"></div>
+        </body>
 </html>
