@@ -1,0 +1,28 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    background: #EEE;
+    background-image: -webkit-gradient(linear, left top, right top, from(#F7F7F7), to(#EEE));
+    font-family: "Verdana", sans-serif;
+    font-size: 81.25%;
+}
+
+h1 {
+    font-size: 2em;
+    float: left;
+    margin: 0;
+    padding: 0.25em 0.5em;
+    
+    font-family: "Univers", "Zurich BT", "Helvetica Neue", "Neue Helevetica", "Helvetica", "Arial", sans-serif;
+    background-color: #DDD;
+}
+
+form {
+    float: left;
+    border: 0.5em solid #DDD;
+    padding: 0.5em;
+    height: 1.5em;
+}
