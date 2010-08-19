@@ -4,25 +4,75 @@
 }
 
 html {
-    background: #EEE;
-    background-image: -webkit-gradient(linear, left top, right top, from(#F7F7F7), to(#EEE));
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#573), to(#363));
     font-family: "Verdana", sans-serif;
     font-size: 81.25%;
+    height: 100%;
+}
+
+body {
+    margin: 20px auto;
+    padding: 1px 0;
+}
+
+body.j {
+    margin: 0 auto;
 }
 
 h1 {
+    font-size: 4em;
+    margin: 0 auto;
+    padding: 0.1em 20px;
+    width: 960px;
+    
+    font-family: "Univers", "Zurich BT", "Helvetica Neue", "Neue Helevetica", "Helvetica", "Arial", sans-serif;
+    color: #FFF;
+    border-bottom-left-radius: 0.5em;
+    border-top-left-radius: 0.5em;
+}
+
+.j h1 {
     font-size: 2em;
     float: left;
     margin: 0;
+    width: auto;
     padding: 0.25em 0.5em;
-    
-    font-family: "Univers", "Zurich BT", "Helvetica Neue", "Neue Helevetica", "Helvetica", "Arial", sans-serif;
-    background-color: #DDD;
 }
 
 form {
+    margin: 20px auto;
+    padding: 10px;
+    width: 960px;
+    background-color: #DEF;
+    background-color: rgba(255, 255, 255, 0.5);
+    border: 1px solid #ABC;
+    border-radius: 1em;
+}
+
+.j form {
     float: left;
-    border: 0.5em solid #DDD;
+    margin: 0.5em;
     padding: 0.5em;
+    width: auto;
     height: 1.5em;
+    border-radius: 0.75em;
+}
+
+embed {
+    display: block;
+    margin: 10px auto 0;
+}
+
+#c {
+    margin: 0 auto 20px;
+    width: 980px;
+}
+
+#c a {
+    color: inherit;
+}
+
+#c a:hover {
+    color: #FFF;
+    background-color: rgba(0, 0, 0, .3);
 }

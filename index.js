@@ -9,6 +9,7 @@ $(document).ready(function () {
         }
     }
     
+    // this is the form that creates the jigsaw
     $('#f').submit(function (evt) {
         var imSrc = $('#u').val();
         var im = $('<img>').attr('src', imSrc);
@@ -39,7 +40,8 @@ $(document).ready(function () {
                 height: 600
             });
             $('#x').replaceWith(embed);
-            embed.attr('id', 'x');            
+            embed.attr('id', 'x');         
+            $('body').addClass('j');   
         });
         if (imElt.complete) {
             im.trigger('load');
