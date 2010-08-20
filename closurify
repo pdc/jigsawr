@@ -10,6 +10,7 @@ Copyright (c) 2010 __MyCompanyName__. All rights reserved.
 import sys
 import os
 import httplib2, urllib
+import re
 
 
 help_message = '''
@@ -21,8 +22,25 @@ compilation_levels = ['WHITESPACE_ONLY', 'SIMPLE_OPTIMIZATIONS', 'ADVANCED_OPTIM
 output_infos = ['compiled_code', 'warnings', 'errors', 'statistics']
 output_formats = ['text', 'json', 'xml']
 
+ext_re = re.compile('(?:\.c)*\.js$')
+
+class CouldNotCompile(Exception): pass
+
 def closurify(js_file, compilation_level=None, output_info=None, output_format=None):
-    print '( %s' % js_file,
+    c_js_file = ext_re.sub('.c.js', js_file)
+    if js_file == c_js_file:
+        raise Usage('Output file would be the same as output file')
+    result = get_closure_compiler_result(js_file, compilation_level, output_info, output_format)
+    if not result.lstrip() and not output_info or output_info == 'compiled_code':
+         errors = get_closure_compiler_result(js_file, compilation_level, 'errors', 'text')
+         print >>sys.stderr, errors
+         raise CouldNotCompile('Could not compile')
+    with open(c_js_file, 'wt') as output:
+        output.write(result)
+    print >>sys.stderr, '\nWrote JavaScript to', c_js_file
+    
+def get_closure_compiler_result(js_file, compilation_level=None, output_info=None, output_format=None):
+    print >>sys.stderr, '( %s' % js_file,
     http = httplib2.Http(os.path.expanduser('~/Library/httplib2'))
     params = {
         'js_code': open(js_file, 'rb').read(),
@@ -30,19 +48,14 @@ def closurify(js_file, compilation_level=None, output_info=None, output_format=N
     }
     if compilation_level and compilation_level != 'SIMPLE_OPTIMIZATIONS':
         params['compilation_level'] = level
-    if output_format and outpout_format != 'text':
+    if output_format and output_format != 'text':
         params['output_format'] = output_format
     data = urllib.urlencode(params)
     response, body = http.request(endpoint, 'POST', data, {
         'Content-type': 'application/x-www-form-urlencoded',        
     })
-    print ')'
-    c_js_file = js_file
-    if js_file[-3:] == '.js':
-        c_js_file = js_file[:-3] + '.c.js'
-    with open(c_js_file, 'wt') as output:
-        output.write(body)
-    print 'Wrote JavaScript to', c_js_file
+    print >>sys.stderr, ') ',
+    return body
 
 class Usage(Exception):
     def __init__(self, msg):
@@ -68,6 +81,9 @@ def main(argv=None):
         for arg in args:
             closurify(arg)
     
+    except CouldNotCompile, err:
+        print >> sys.stderr, err
+        return 1
     except Usage, err:
         print >> sys.stderr, sys.argv[0].split("/")[-1] + ": " + str(err.msg)
         print >> sys.stderr, "\t for help use --help"
