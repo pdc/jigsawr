@@ -137,7 +137,7 @@ function mkPieceElts(u, imWd, imHt, nh, nv) {
     }
     
     var symbolElt = subelt(defsElt, 'symbol', {
-        id: 'im',
+        id: 'im'
     })
     var imageElt = subelt(symbolElt, 'image', {
         href: u, 
