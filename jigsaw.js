@@ -157,22 +157,22 @@ function mkPieceElts(u, imWd, imHt, nh, nv) {
 		    if (j == 0) {
 		        ds.push('h' + wd);
 	        } else {
-	            ds.splice(ds.length, 0, hBump(wd, hash(i, j) & 1));
+	            ds = ds.concat(hBump(wd, hash(i, j) & 1));
 		    }
 		    if (i == nh - 1) {
 		        ds.push('v' + ht);
 	        } else {
-	            ds.splice(ds.length, 0, vBump(ht, hash(i + 1, j) & 2));
+	            ds = ds.concat(vBump(ht, hash(i + 1, j) & 2));
 		    }
 		    if (j == nv - 1) {
 		        ds.push('h' + -wd);
 	        } else {
-	            ds.splice(ds.length, 0, hBump(-wd, hash(i, j + 1) & 1));
+	            ds = ds.concat(0, hBump(-wd, hash(i, j + 1) & 1));
 		    }
 		    if (i == 0) {
 		        ds.push('v' + -ht);
 	        } else {
-	            ds.splice(ds.length, 0, vBump(-ht, hash(i, j) & 2));
+	            ds = ds.concat(0, vBump(-ht, hash(i, j) & 2));
 		    }
 		    ds.push('z');
 		    d = ds.join(' ');
