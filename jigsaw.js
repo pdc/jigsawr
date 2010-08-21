@@ -34,6 +34,7 @@ function subelt(p, n, atts) {
     return e;
 }
 
+/*
 var logElt;
 var logTspans;
 var logLineHt = 16;
@@ -59,6 +60,7 @@ function log(text) {
     newElt.appendChild(doc.createTextNode(text));
     logTspans.push(newElt);
 }
+*/
 
 //
 // Application specific
@@ -264,7 +266,9 @@ function mkJigsaw(bgElt, pieceElts) {
                         }
                         var dSquared = Math.pow(dragPt.x - adjPt.x, 2) + Math.pow(dragPt.y - adjPt.y, 2);
                         if (dSquared < 25) { // Must be close to the dragged piece.
+                            /*
                             log('snap');
+                            */
                             // Adjust the position of the dragged piece to close the gap.
                             var dx = adjPt.x - dragPt.x;
                             var dy = adjPt.y - dragPt.y;
@@ -285,7 +289,9 @@ function mkJigsaw(bgElt, pieceElts) {
                     }
                 }
             }
+            /*
             log('Hunk size: ' + dragHunk.elts.length);
+            */
             dragHunk = null;
             isDrag = false;
         }
