@@ -1,5 +1,5 @@
 
-
+CLOSURIFY=tools/closurify
 
 js_files=index.js jigsaw.js
 html_files=index.html
@@ -23,6 +23,6 @@ dist: $(dist_files)
 compressed_js: $(compressed_js_files)
 
 %.c.js: %.js
-	./closurify $<
+	$(CLOSURIFY) $<
 	
 .SUFFIX: .js
