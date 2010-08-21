@@ -315,6 +315,9 @@ function mkJigsaw(bgElt, pieceElts) {
 function init(evt) {
 	doc = evt.target.ownerDocument;
 	rootElt = doc.documentElement;
+	var docWd = rootElt.width.animVal.value;
+	var docHt = rootElt.height.animVal.value;
+	//rootElt.setAttribute('viewBox', '0 0 ' + docWd + ' ' + docHt);
 	var s = location.search;
 	var args = {
 	    u: 'http://farm5.static.flickr.com/4077/4871527376_35120786b3_z.jpg',

@@ -10,19 +10,22 @@ $(document).ready(function () {
     }
     // this is the form that creates the jigsaw
     $('#f').submit(function (evt) {
+        var em = $('#c a').height();
+        var jigWd = $(document).width(),
+            jigHt = $(document).height() - 6 * em;
         var imSrc = $('#u').val();
         var im = $('<img>').attr('src', imSrc);
         imElt = im.get(0);
         im.load(function () {
             var wd = imElt.width;
             var ht = imElt.height;
-            if (wd > 980) {
-                ht *= 980 / wd;
-                wd = 980;
+            if (wd > jigWd) {
+                ht *= jigWd / wd;
+                wd = jigWd;
             }
-            if (ht > 600) {
-                wd *= 600 / ht;
-                ht = 600;
+            if (ht > jigHt) {
+                wd *= jigHt / ht;
+                ht = jigHt;
             }
             var n = $('#d').val();
             var args = {
@@ -35,8 +38,8 @@ $(document).ready(function () {
             var embed = $('<embed>').attr({
                 src: 'jigsaw.svg' + escapeArgs(args),
                 type: 'image/svg+xml',
-                width: 980,
-                height: 600
+                width: jigWd,
+                height: jigHt
             });
             $('#x').replaceWith(embed);
             embed.attr('id', 'x');

@@ -1,20 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      xmlns:xlink="http://www.w3.org/1999/xlink"
-     viewBox="0 0 980 600"
      version="1.1"
      onload="init(evt)">
 
 	<title>Jigsaw</title>
-	<desc>Damian Cugley, 2010-08-10</desc>
+	<desc>An interactive jigsaw based on a picture of your choosing.</desc>
 	<defs id="defs">
 	    <style type="text/css">
-	        #p path {
-    	        stroke-width: 0.5px;
-    	        stroke: #CCC;
-	        }
-	        #p path:hover {
-    	        stroke-width: 2px;
-	        }
+	        #p path{stroke-width: .5px; stroke: #CCC}
+	        #p path:hover{stroke-width: 2px}
         </style>
         <linearGradient id="g" x2="25%" y2="100%">
             <stop offset="5%" stop-color="#554"/>
@@ -22,7 +16,7 @@
         </linearGradient>
 	</defs>
 	<g id="p">
-	    <rect  id="bg" width="980" height="600" fill="url(#g)" stroke="#000" stroke-width="0.5" />
+	    <rect id="bg" width="100%" height="100%" fill="url(#g)" stroke="#000" stroke-width="0.5" />
     </g>
 	<script xlink:href="jigsaw.js" type="application/javascript"/>
 </svg>

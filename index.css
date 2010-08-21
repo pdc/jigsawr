@@ -27,14 +27,15 @@ body.j {
 
 h1 {
     font-size: 4em;
-    margin: 0 auto;
+    margin: 1em auto 0.5em;
     padding: 0.1em 20px;
-    width: 960px;
+    width: 480px;
     
     font-family: "Univers", "Zurich BT", "Helvetica Neue", "Neue Helevetica", "Helvetica", "Arial", sans-serif;
     color: #FFF;
     border-bottom-left-radius: 0.5em;
     border-top-left-radius: 0.5em;
+    line-height: 1;
 }
 
 .j h1 {
@@ -48,7 +49,7 @@ h1 {
 form {
     margin: 20px auto;
     padding: 10px;
-    width: 960px;
+    width: 480px;
     background-color: #DEF;
     background-color: rgba(255, 255, 255, 0.5);
     border: 1px solid #ABC;
@@ -70,16 +71,27 @@ form {
 }
 
 embed {
+    clear: both;
     display: block;
-    margin: 10px auto 0;
+    margin: 10px 0 0;
 }
 
 #c {
-    margin: 0 auto 20px;
-    width: 980px;
+    width: 500px;
+    margin: 20px auto;
+    line-height: 1;
+}
+
+.j #c {
+    width: auto;
+    margin: 0;
 }
 
 #c a {
+    float: left;
+    display: block;
+    height: 1em;
+    padding: 2px 10px;
     color: inherit;
 }
 
