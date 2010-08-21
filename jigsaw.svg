@@ -17,10 +17,14 @@
     	        stroke-width: 2px;
 	        }
         </style>
+        <linearGradient id="g" x2="25%" y2="100%">
+            <stop offset="5%" stop-color="#554"/>
+            <stop offset="95%" stop-color="#282828"/>
+        </linearGradient>
 	</defs>
 	<g id="p">
     	<g id="bg">
-    	    <rect width="980" height="600" fill="#789" stroke="#000" stroke-width="2" />
+    	    <rect width="980" height="600" fill="url(#g)" stroke="#000" stroke-width="0.5" />
         </g>
     </g>
 	<script xlink:href="jigsaw.js" type="application/javascript"/>
