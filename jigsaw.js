@@ -1,7 +1,6 @@
 
 var SVG = 'http://www.w3.org/2000/svg';
 var XLINK = 'http://www.w3.org/1999/xlink';
-
 var doc = null;
 var rootElt = null;
 
@@ -13,7 +12,7 @@ function getElt(idOrElt) {
     return doc.getElementById(idOrElt);
 }
 
-// Create an element with the given name and attributes. 
+// Create an element with the given name and attributes.
 function mk(n, atts) {
     var e = document.createElementNS(SVG, n);
     if (atts) {
@@ -39,7 +38,6 @@ var logElt;
 var logTspans;
 var logLineHt = 16;
 var logMax = 600 / 16;
-
 function log(text) {
     if (logTspans == null) {
         logElt = subelt(getElt('bg'), 'text', {
@@ -66,26 +64,25 @@ function log(text) {
 // Application specific
 //
 
-
 // Create the path for one bump on a jigsaw piece.
 // sideHt -- total length of the side (height of the piece). May be -ve.
 // isIn -- whether the bump turns intwards or points outwards
 function hBump(sideWd, isIn) {
-    var bwd = Math.round(0.4 * sideWd);
-    var bht = Math.round(0.1 * sideWd) * (!!isIn ^ (sideWd < 0) ? -1 : 1);
-    var cht = 0.5 * bht;
+    var bwd = .4 * sideWd;
+    var bht = .1 * sideWd * (!!isIn ^ (sideWd < 0) ? -1 : 1);
+    var cht = .5 * bht;
     var cwd = cht * ((sideWd < 0) != (cht < 0) ? -1 : 1);
     return [
-        'h' + (0.5 * (sideWd - bwd)), 
+        'h' + (.5 * (sideWd - bwd)),
         'q' + cwd + ',0 ' + cwd + ',' + cht,
         't' + -cwd + ',' + cht,
         -cwd + ',' + cht,
-        (cwd + 0.5 * bwd) + ',' + cht,
-        (cwd + 0.5 * bwd) + ',' + -cht,
+        (cwd + .5 * bwd) + ',' + cht,
+        (cwd + .5 * bwd) + ',' + -cht,
         -cwd + ',' + -cht,
         -cwd + ',' + -cht,
         cwd + ',' + -cht,
-        'h' + (0.5 * (sideWd - bwd))
+        'h' + (.5 * (sideWd - bwd))
     ];
 }
 
@@ -93,37 +90,25 @@ function hBump(sideWd, isIn) {
 // sideHt -- total length of the side (height of the piece). May be -ve.
 // isIn -- whether the bump turns intwards or points outwards
 function vBump(sideHt, isIn) {
-    var bht = Math.round(0.4 * sideHt);
-    var bwd = Math.round(0.1 * sideHt) * (!!isIn ^ (sideHt < 0) ? -1 : 1);
-    var cwd = 0.5 * bwd;
+    var bht = .4 * sideHt;
+    var bwd = .1 * sideHt * (!!isIn ^ (sideHt < 0) ? -1 : 1);
+    var cwd = .5 * bwd;
     var cht = cwd * ((sideHt < 0) != (cwd < 0) ? -1 : 1);
     return [
-        'v' + (0.5 * (sideHt - bht)), 
+        'v' + (.5 * (sideHt - bht)),
         'q0,' + cht + ' ' + cwd + ',' + cht,
         't' + cwd + ',' + -cht,
         cwd + ',' + -cht,
-        cwd + ',' + (cht + 0.5 * bht),
-        -cwd + ',' + (cht + 0.5 * bht),
+        cwd + ',' + (cht + .5 * bht),
+        -cwd + ',' + (cht + .5 * bht),
         -cwd + ',' + -cht,
         -cwd + ',' + -cht,
         -cwd + ',' + cht,
-        'v' + (0.5 * (sideHt - bht))
+        'v' + (.5 * (sideHt - bht))
     ];
 }
 
-
-// Create the path for one bump on a jigsaw piece.
-// hv -- either 'h' for a bottom or top side or 'v'
-// vh -- either 'v' or 'h'
-// len -- total length of the side (width or height of the piece). May be -ve.
-// isIn -- whether the bump turns intwards or points outwards
-function bump(hv, vh, len, isIn) {
-    var bwh = 0.2 * len;
-    var bhw = 0.1 * len * (!!isIn ^ (len < 0) ? -1 : 1);
-    return [hv + 0.5 * (len - bwh), vh + bhw, hv + bwh, vh + -bhw, hv + 0.5 * (len - bwh)];
-}
-
-function mkPieceElts(u, imWd, imHt, nh, nv) {	
+function mkPieceElts(u, imWd, imHt, nh, nv) {
     var wd = imWd / nh;
     var ht = imHt / nv;
 	var hunks = [];
@@ -131,27 +116,23 @@ function mkPieceElts(u, imWd, imHt, nh, nv) {
 	var hunksElt = getElt('p');
 	var dwd = hunksElt.ownerSVGElement.width.animVal.value;
 	var dht = hunksElt.ownerSVGElement.height.animVal.value;
-	
     var hash = function (i, j) {
         return ((i * 37) ^ (j * 1009)) % 17;
     }
-    
     var symbolElt = subelt(defsElt, 'symbol', {
         id: 'im'
     })
     var imageElt = subelt(symbolElt, 'image', {
-        href: u, 
+        href: u,
         width: imWd,
         height: imHt
     });
-	
 	var pieceEltss = []; // 2-d array of hunks
 	var pieceElts = []; // simple list of hunks
 	for (var i = 0; i < nh; ++i) {
 	    pieceEltss[i] = []
 	    for (var j = 0; j < nv; ++j) {
 		    var id = String.fromCharCode(97 + i) + String.fromCharCode(97 + j);
-		    
 		    // Create path.
 		    var ds = ['M0,0'];
 		    if (j == 0) {
@@ -176,8 +157,7 @@ function mkPieceElts(u, imWd, imHt, nh, nv) {
 		    }
 		    ds.push('z');
 		    d = ds.join(' ');
-		    
-		    // Create pattern. 
+		    // Create pattern.
 		    // The image is added using a pattern (a) so that it does
 		    // not expand the bbox of the piece, and (b) because
 		    // images are independently draggable in Safari
@@ -189,56 +169,51 @@ function mkPieceElts(u, imWd, imHt, nh, nv) {
 		        x: 0,
 		        y: 0,
 		        width: imWd,
-		        height: imHt		        
+		        height: imHt
 		    });
 		    var useElt = subelt(patternElt, 'use', {
 		        href: '#im'
 		    })
-	        
 	        // Random starting position.
 		    var x = Math.random() * (dwd - wd);
 		    var y = Math.random() * (dht - ht);
-		    
+		    /*
 		    if (false &&  (i ^ j) & 1) {
     		    // Non-random starting points to see that the hunks fit.
     		    x = i * wd * 1.2 + 50;
     		    y = j * ht * 1.2 + 40;
 		    }
-		    
+		    */
 		    // Create image with clip path.
 		    var pieceElt = subelt(hunksElt, 'g', {
 		        id: 'g' + id,
-		        transform: 'translate(' + x + ',' + y + ')'	        
-		    }) 
-		    
+		        transform: 'translate(' + x + ',' + y + ')'
+		    })
 	        var pathElt = subelt(pieceElt, 'path', {
 	            d: d,
 	            fill: 'url(#p' + id + ')'
 	        })
-	        
 		    pieceEltss[i][j] = pieceElt;
 		    pieceElts.push(pieceElt)
 	    }
 	}
-	
 	for (i = 0; i < nh; ++i) {
 	    for (j = 0; j < nv; ++j) {
-	        pieceEltss[i][j].adjs = []
+	        var adjs = pieceEltss[i][j].adjs = [];
 	        if (i > 0) {
-	            pieceEltss[i][j].adjs.push({elt: pieceEltss[i - 1][j], dx: -wd});
+	            adjs.push({elt: pieceEltss[i - 1][j], dx: -wd});
             }
             if (i + 1 < nh) {
-	            pieceEltss[i][j].adjs.push({elt: pieceEltss[i + 1][j], dx: wd});
+	            adjs.push({elt: pieceEltss[i + 1][j], dx: wd});
             }
             if (j > 0) {
-	            pieceEltss[i][j].adjs.push({elt: pieceEltss[i][j - 1], dy: -ht});
+	            adjs.push({elt: pieceEltss[i][j - 1], dy: -ht});
             }
             if (j + 1 < nv) {
-	            pieceEltss[i][j].adjs.push({elt: pieceEltss[i][j + 1], dy: ht});
+	            adjs.push({elt: pieceEltss[i][j + 1], dy: ht});
             }
 	    }
 	}
-	
 	return pieceElts;
 }
 
@@ -249,24 +224,20 @@ function getPt(elt) {
 
 function mkJigsaw(bgElt, pieceElts) {
     bgElt = getElt(bgElt);
-    
     var hunks = [];
     for (var i in pieceElts) {
         hunks.push(pieceElts[i].hunk = {i: i, elts: [pieceElts[i]]});
     }
-    
     var isDrag = false;
     var dragHunk = null;
     var dragStartX = null;
     var dragStartY = null;
     var startX = null;
     var startY = null;
-
     bgElt.addEventListener('mousemove', function (evt) {
         if (isDrag) {
             var shiftX = evt.clientX - dragStartX;
             var shiftY = evt.clientY - dragStartY;
-            
             for (var j in dragHunk.elts) {
                 var e = dragHunk.elts[j];
                 var t = 'translate(' + (e.startX + shiftX) + ',' + (e.startY + shiftY) + ')';
@@ -280,7 +251,6 @@ function mkJigsaw(bgElt, pieceElts) {
             for (var i = 0; i < dragHunk.elts.length; ++i) {
                 var dragElt = dragHunk.elts[i];
                 var dragPt = getPt(dragElt);
-                
                 // Check each adjacent piece to this one.
                 for (var j in dragElt.adjs) {
                     var adj = dragElt.adjs[j];
@@ -295,7 +265,6 @@ function mkJigsaw(bgElt, pieceElts) {
                         var dSquared = Math.pow(dragPt.x - adjPt.x, 2) + Math.pow(dragPt.y - adjPt.y, 2);
                         if (dSquared < 25) { // Must be close to the dragged piece.
                             log('snap');
-                            
                             // Adjust the position of the dragged piece to close the gap.
                             var dx = adjPt.x - dragPt.x;
                             var dy = adjPt.y - dragPt.y;
@@ -306,7 +275,6 @@ function mkJigsaw(bgElt, pieceElts) {
                                 ee.setAttribute('transform', t);
                             }
                             dragPt = getPt(dragElt);
-                            
                             // Attach the elements of the absorbed chunk to this one.
                             var absorbedElts = adj.elt.hunk.elts;
                             dragHunk.elts = dragHunk.elts.concat(absorbedElts);
@@ -318,12 +286,10 @@ function mkJigsaw(bgElt, pieceElts) {
                 }
             }
             log('Hunk size: ' + dragHunk.elts.length);
-            
             dragHunk = null;
             isDrag = false;
         }
     }, false);
-
     for (var k in hunks) {
         var hunk = hunks[k];
         for (var eltID in hunk.elts) {
@@ -331,7 +297,6 @@ function mkJigsaw(bgElt, pieceElts) {
             pieceElt.addEventListener('mousedown', function (evt) {
                 dragHunk = evt.currentTarget.hunk;
                 isDrag = true;
-
                 dragStartX = evt.clientX;
                 dragStartY = evt.clientY;
                 for (var j in dragHunk.elts) {
@@ -350,7 +315,6 @@ function mkJigsaw(bgElt, pieceElts) {
 function init(evt) {
 	doc = evt.target.ownerDocument;
 	rootElt = doc.documentElement;
-	
 	var s = location.search;
 	var args = {
 	    u: 'http://farm5.static.flickr.com/4077/4871527376_35120786b3_z.jpg',
@@ -368,7 +332,6 @@ function init(evt) {
 	        args[k] = v;
         }
 	}
-	
 	var pieceElts = mkPieceElts(args.u, args.wd, args.ht, args.nh, args.nv);
 	mkJigsaw('p', pieceElts);
 };

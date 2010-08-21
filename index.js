@@ -8,7 +8,6 @@ $(document).ready(function () {
             return '?' + ss.join('&');
         }
     }
-    
     // this is the form that creates the jigsaw
     $('#f').submit(function (evt) {
         var imSrc = $('#u').val();
@@ -30,8 +29,8 @@ $(document).ready(function () {
                 u: imSrc,
                 wd: wd,
                 ht: ht,
-                nh: Math.ceil(Math.pow(n * wd / ht, 0.5)),
-                nv: Math.ceil(Math.pow(n * ht / wd, 0.5))
+                nh: Math.ceil(Math.pow(n * wd / ht, .5)),
+                nv: Math.ceil(Math.pow(n * ht / wd, .5))
             }
             var embed = $('<embed>').attr({
                 src: 'jigsaw.svg' + escapeArgs(args),
@@ -40,15 +39,14 @@ $(document).ready(function () {
                 height: 600
             });
             $('#x').replaceWith(embed);
-            embed.attr('id', 'x');         
-            $('body').addClass('j');   
+            embed.attr('id', 'x');
+            $('body').addClass('j');
         });
         if (imElt.complete) {
             im.trigger('load');
         }
         evt.preventDefault();
     });
-    
     $('#g').submit(function (evt) {
         var tags = $('#t').val();
         var args = {

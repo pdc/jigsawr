@@ -1,6 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      xmlns:xlink="http://www.w3.org/1999/xlink"
-     width="980" height="600"
      viewBox="0 0 980 600"
      version="1.1"
      onload="init(evt)">
@@ -23,9 +22,7 @@
         </linearGradient>
 	</defs>
 	<g id="p">
-    	<g id="bg">
-    	    <rect width="980" height="600" fill="url(#g)" stroke="#000" stroke-width="0.5" />
-        </g>
+	    <rect  id="bg" width="980" height="600" fill="url(#g)" stroke="#000" stroke-width="0.5" />
     </g>
 	<script xlink:href="jigsaw.js" type="application/javascript"/>
 </svg>
