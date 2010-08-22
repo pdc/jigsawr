@@ -6,11 +6,11 @@
 html {
     font-size: 81.25%;
     
-  background-color: #573;
-  background-image: -moz-linear-gradient(#573, #231); /* FF3.6 */
-  background-image: -webkit-gradient(linear,left top,left bottom,from(#573),to(#231)); /* Saf4+, Chrome */
-            filter:  progid:DXImageTransform.Microsoft.gradient(startColorStr='#557733', EndColorStr='#336633'); /* IE6,IE7 */
-        -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#557733', EndColorStr='#336633')"; /* IE8 */
+    background-color: #573;
+    background-image: -moz-linear-gradient(#573, #231); /* FF3.6 */
+    background-image: -webkit-gradient(linear,left top,left bottom,from(#573),to(#231)); /* Saf4+, Chrome */
+    filter:  progid:DXImageTransform.Microsoft.gradient(startColorStr='#557733', EndColorStr='#336633'); /* IE6,IE7 */
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#557733', EndColorStr='#336633')"; /* IE8 */
 
     font-family: "Verdana", sans-serif;
     height: 100%;
@@ -50,18 +50,22 @@ form {
     margin: 20px auto;
     padding: 10px;
     width: 480px;
-    background-color: #DEF;
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: #99AA85;
+    background: rgba(255, 255, 240, 0.5);
     border: 1px solid #ABC;
     -moz-border-radius: 1em; 
     -webkit-border-radius: 1em; 
     border-radius: 1em;
 }
 
+form.l {
+    background: #99AA85 url(spin.gif) right 50% no-repeat;
+}
+
 .j form {
     float: left;
     margin: 0.5em;
-    padding: 0.5em;
+    padding: 0.5em 20px;
     width: auto;
     height: 1.5em;
     

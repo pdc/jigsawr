@@ -6,11 +6,12 @@ js_files=index.js jigsaw.js
 html_files=index.html
 svg_files=jigsaw.svg
 css_files=index.css
+image_files=spin.gif
 
 compressed_js_files=$(js_files:%.js=%.c.js)
 compressed_html_files=$(html_files:%.html=%.c.html)
 compressed_svg_files=$(svg_files:%.svg=%.c.svg)
-dist_files=$(compressed_js_files) $(compressed_html_files) $(compressed_svg_files) $(css_files)
+dist_files=$(compressed_js_files) $(compressed_html_files) $(compressed_svg_files) $(css_files) $(image_files)
 
 all: compressed_js compressed_html compressed_svg
 clean:
@@ -25,6 +26,7 @@ dist: $(dist_files)
 	for i in $(compressed_html_files); do cp $$i $(DIST_DIR)/$$(basename $$i .c.html).html; done
 	for i in $(compressed_svg_files); do cp $$i $(DIST_DIR)/$$(basename $$i .c.svg).svg; done
 	cp -p $(css_files) $(DIST_DIR)
+	cp -p $(image_files) $(DIST_DIR)
 	wc $(DIST_DIR)/* | tee dist
 	zip -9vr $(DIST_DIR) $(DIST_DIR) -x $(DIST_DIR)/.DS_Store
 

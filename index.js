@@ -36,6 +36,7 @@ $(document).ready(function () {
     
     // this is the form that creates the jigsaw
     $('#f').submit(function (evt) {
+        $(this).addClass('l');
         var jigSize = getJigsawSize();
         var jigWd = jigSize.width, jigHt = jigSize.height;
         var imSrc = $('#u').val();
@@ -70,6 +71,7 @@ $(document).ready(function () {
                 });
                 $('#x').empty().append(embed);
                 $('body').addClass('j');
+                $('#f').removeClass('l');
                 isLoaded = true;
             }
         });
@@ -78,7 +80,6 @@ $(document).ready(function () {
         }
         evt.preventDefault();
     });
-    
     
     var apiKey = '489c9667c5c8957340a78bacacb051d6';
     var flickrCall = function (meth, args, func) {
@@ -98,6 +99,7 @@ $(document).ready(function () {
     
     // This is the form that updates the image URL.
     $('#g').submit(function (evt) {
+        $(this).addClass('l');
         var tags = $('#t').val();
         var perPage = 25;
         flickrCall('photos.search', {
@@ -134,6 +136,8 @@ $(document).ready(function () {
                     .text(photo.title + ' by ' + photo.ownername)
                     .appendTo(pElt);
                 $('#c').empty().append(pElt);
+                $('#g').removeClass('l');
+                $('#f').addClass('h').removeClass('h');;
                 /*
                 updateSubmit($('#u'));
                 */
