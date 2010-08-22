@@ -61,8 +61,7 @@ $(document).ready(function () {
                     width: jigWd,
                     height: jigHt
                 });
-                $('#x').replaceWith(embed);
-                embed.attr('id', 'x');
+                $('#x').empty().append(embed);
                 $('body').addClass('j');
                 isLoaded = true;
             }
@@ -76,6 +75,7 @@ $(document).ready(function () {
     // This is the form that updates the image URL.
     $('#g').submit(function (evt) {
         var tags = $('#t').val();
+        var perPage = 25;
         var args = {
             method: 'flickr.photos.search',
             api_key: '489c9667c5c8957340a78bacacb051d6',
@@ -84,8 +84,8 @@ $(document).ready(function () {
             sort: 'interestingness-desc',
             content_type: 1,
             media: 'photos',
-            per_page: 25,
-            extras: 'url_m,owner_name',
+            per_page: perPage,
+            extras: 'url_m,url_o,owner_name',
             format: 'json'
         }
         var a = $.ajax({
@@ -94,8 +94,12 @@ $(document).ready(function () {
             dataType: 'jsonp',
             jsonp: 'jsoncallback',
             success: function (data, textStatus, req) {
-                var photo = data.photos.photo[0];
-                var imgSrc = photo.url_m;
+                var photoIndex = Math.floor(Math.random() * perPage);
+                var photo = data.photos.photo[photoIndex];
+                var imgSrc = (photo.width_o > 1024 || photo.height_o > 1024
+                    ? ('http://farm' + photo.farm + '.static.flickr.com/' 
+                        + photo.server + '/' + photo.id + '_' + photo.secret + '_b.jpg')
+                    : photo.url_o || photo.url_m);
                 $('#u').val(imgSrc);
                 var pElt = $('<p>').attr('id', 'c');
                 var aElt = $('<a>')
