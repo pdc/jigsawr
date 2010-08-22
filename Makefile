@@ -1,5 +1,6 @@
 
 CLOSURIFY=tools/closurify
+DIST_DIR=10k/jigsaw
 
 js_files=index.js jigsaw.js
 html_files=index.html
@@ -14,14 +15,18 @@ dist_files=$(compressed_js_files) $(compressed_html_files) $(compressed_svg_file
 all: compressed_js compressed_html compressed_svg
 clean:
 	rm -f $(compressed_js_files)
-	rm -f dist/*
+	rm -f $(compressed_html_files)
+	rm -f $(compressed_svg_files)
+	rm -f $(DIST_DIR)/*
 	
 dist: $(dist_files)
-	[ -d dist ] || mkdir dist
-	for i in $(compressed_js_files); do cp $$i dist/$$(basename $$i .c.js).js; done	
-	for i in $(compressed_html_files); do cp $$i dist/$$(basename $$i .c.html).html; done
-	for i in $(compressed_svg_files); do cp $$i dist/$$(basename $$i .c.svg).svg; done
-	cp -p $(css_files) dist	
+	[ -d $(DIST_DIR) ] || mkdir $(DIST_DIR)
+	for i in $(compressed_js_files); do cp $$i $(DIST_DIR)/$$(basename $$i .c.js).js; done	
+	for i in $(compressed_html_files); do cp $$i $(DIST_DIR)/$$(basename $$i .c.html).html; done
+	for i in $(compressed_svg_files); do cp $$i $(DIST_DIR)/$$(basename $$i .c.svg).svg; done
+	cp -p $(css_files) $(DIST_DIR)
+	wc $(DIST_DIR)/*
+	zip -9vr $(DIST_DIR) $(DIST_DIR)
 
 compressed_js: $(compressed_js_files)
 
