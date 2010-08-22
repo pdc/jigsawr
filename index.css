@@ -77,25 +77,44 @@ embed {
 }
 
 #c {
-    width: 500px;
-    margin: 20px auto;
-    line-height: 1;
+    width: 490px;
+    margin: 20px auto 0;
 }
 
-.j #c {
+#a {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+.j #c,
+.j #a {
+    position: static;
     width: auto;
     margin: 0;
 }
 
 #c a {
     float: left;
-    display: block;
     height: 1em;
-    padding: 2px 10px;
-    color: inherit;
 }
 
-#c a:hover {
+#a a {
+    float: right;
+    height: 1em;
+}
+
+a:link,
+a:visited {
+    padding: 2px 0;
+    margin: 0 5px;
+    color: #EFE;
+    text-decoration: none;
+    border-bottom: 1px solid #9A9;
+}
+
+a:hover {
     color: #FFF;
-    background-color: rgba(0, 0, 0, .3);
+    border-color: #FFF;
+    background-color: rgba(255, 255, 240, .2);
 }
