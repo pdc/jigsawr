@@ -3,10 +3,6 @@
 
 Damian Cugley, 12 August to 22 August 2010
 
-As a side project I am working on an entry for the [10K Apart][2]
-competition which is due quite soon so I will not talk about it much yet
-since I still have work to do.
-
 Start at <http://jigsaw.alleged.org.uk/>, enter a Flickr tag and press the
 Next to get button to one of Flickr’s most interesting photos with that
 tag. Then press the Jigsaw button to see a jigsaw made from that
@@ -26,7 +22,7 @@ If you want to gaze upon the un-minified code, it is [available on
 GitHub][1].
 
 My aim, if I can get this code working well enough before 25 August, is
-to enter it in to the [10K Apart][] contest. I am working on this in odd
+to enter it in to the [10K Apart][2] contest. I am working on this in odd
 hours of spare time so I do not promise to finish it in time!
 
   [1]: http://github.com/pdc/jigsaw
