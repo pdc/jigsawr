@@ -8,6 +8,22 @@ $(document).ready(function () {
             return '?' + ss.join('&');
         }
     }
+
+    // Disable submit buttons until argumenbts supplied.
+    var updateSubmit = function (elt$) {
+        var submit$ = elt$.nextAll('input');
+        if (elt$.val() == '') {
+            submit$.attr('disabled', 'disabled');
+        } else {
+            submit$.removeAttr('disabled');
+        }
+    }
+    for (var e in {t: 1, u: 1}) {
+        var e$ = $('#' + e);
+        updateSubmit(e$);
+        e$.change(function () {updateSubmit($(this))});
+    }
+    
     // this is the form that creates the jigsaw
     $('#f').submit(function (evt) {
         var em = $('#c a').height();
@@ -54,6 +70,8 @@ $(document).ready(function () {
         }
         evt.preventDefault();
     });
+    
+    // This is the form that updates the image URL.
     $('#g').submit(function (evt) {
         var tags = $('#t').val();
         var args = {
@@ -83,8 +101,9 @@ $(document).ready(function () {
                     .text(photo.title + ' by ' + photo.ownername)
                     .appendTo(pElt);
                 $('#c').replaceWith(pElt);
+                updateSubmit($('#u'));
             }
         })
         evt.preventDefault();
-    })
-})
+    });
+});
