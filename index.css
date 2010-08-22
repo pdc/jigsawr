@@ -58,6 +58,33 @@ form {
     border-radius: 1em;
 }
 
+form a {
+    border-bottom: 1px solid #575;
+}
+
+form>div {
+    margin: 1em 0 0;
+}
+
+.j form>div {
+    margin: 0 1em;
+    float: left;
+}
+
+form a:hover {
+    cursor: pointer;
+    color: #123;
+    background-color: argb(255, 255, 240, 0.5);
+    border-color: #123;
+}
+
+.t  #du {
+    display: none;
+}
+.u #dt {
+    display: none;
+}
+
 form.l {
     background: #99AA85 url(spin.gif) right 50% no-repeat;
 }
@@ -108,8 +135,8 @@ embed {
     height: 1em;
 }
 
-a:link,
-a:visited {
+p a:link,
+p a:visited {
     padding: 2px 0;
     margin: 0 5px;
     color: #EFE;
@@ -117,7 +144,7 @@ a:visited {
     border-bottom: 1px solid #9A9;
 }
 
-a:hover {
+p a:hover {
     color: #FFF;
     border-color: #FFF;
     background-color: rgba(255, 255, 240, .2);
