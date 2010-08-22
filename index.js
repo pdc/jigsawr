@@ -9,6 +9,7 @@ $(document).ready(function () {
         }
     }
 
+/*
     // Disable submit buttons until argumenbts supplied.
     var updateSubmit = function (elt$) {
         var submit$ = elt$.nextAll('input');
@@ -23,6 +24,7 @@ $(document).ready(function () {
         updateSubmit(e$);
         e$.change(function () {updateSubmit($(this))});
     }
+*/
     
     // this is the form that creates the jigsaw
     $('#f').submit(function (evt) {
@@ -101,7 +103,9 @@ $(document).ready(function () {
                     .text(photo.title + ' by ' + photo.ownername)
                     .appendTo(pElt);
                 $('#c').replaceWith(pElt);
+                /*
                 updateSubmit($('#u'));
+                */
             }
         })
         evt.preventDefault();
