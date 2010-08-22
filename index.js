@@ -16,34 +16,38 @@ $(document).ready(function () {
         var imSrc = $('#u').val();
         var im = $('<img>').attr('src', imSrc);
         imElt = im.get(0);
+        var isLoaded = false;
         im.load(function () {
-            var wd = imElt.width;
-            var ht = imElt.height;
-            if (wd > jigWd) {
-                ht *= jigWd / wd;
-                wd = jigWd;
+            if (!isLoaded) { 
+                var wd = imElt.width;
+                var ht = imElt.height;
+                if (wd > jigWd) {
+                    ht *= jigWd / wd;
+                    wd = jigWd;
+                }
+                if (ht > jigHt) {
+                    wd *= jigHt / ht;
+                    ht = jigHt;
+                }
+                var n = $('#d').val();
+                var args = {
+                    u: imSrc,
+                    wd: wd,
+                    ht: ht,
+                    nh: Math.ceil(Math.pow(n * wd / ht, .5)),
+                    nv: Math.ceil(Math.pow(n * ht / wd, .5))
+                }
+                var embed = $('<embed>').attr({
+                    src: 'jigsaw.svg' + escapeArgs(args),
+                    type: 'image/svg+xml',
+                    width: jigWd,
+                    height: jigHt
+                });
+                $('#x').replaceWith(embed);
+                embed.attr('id', 'x');
+                $('body').addClass('j');
+                isLoaded = true;
             }
-            if (ht > jigHt) {
-                wd *= jigHt / ht;
-                ht = jigHt;
-            }
-            var n = $('#d').val();
-            var args = {
-                u: imSrc,
-                wd: wd,
-                ht: ht,
-                nh: Math.ceil(Math.pow(n * wd / ht, .5)),
-                nv: Math.ceil(Math.pow(n * ht / wd, .5))
-            }
-            var embed = $('<embed>').attr({
-                src: 'jigsaw.svg' + escapeArgs(args),
-                type: 'image/svg+xml',
-                width: jigWd,
-                height: jigHt
-            });
-            $('#x').replaceWith(embed);
-            embed.attr('id', 'x');
-            $('body').addClass('j');
         });
         if (imElt.complete) {
             im.trigger('load');

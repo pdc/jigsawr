@@ -116,8 +116,17 @@ function mkPieceElts(u, imWd, imHt, nh, nv) {
 	var hunks = [];
 	var defsElt = getElt('defs');
 	var hunksElt = getElt('p');
-	var dwd = hunksElt.ownerSVGElement.width.animVal.value;
-	var dht = hunksElt.ownerSVGElement.height.animVal.value;
+	var svgElt = hunksElt.ownerSVGElement;
+	var dwd, dht;
+	if (svgElt.getBoundingClientRect) {
+	    // Firefox
+	    var rc = svgElt.getBoundingClientRect();
+	    dwd = rc.width;
+	    dht = rc.height;
+	} else {
+	    dwd = hunksElt.ownerSVGElement.width.animVal.value;
+	    dht = hunksElt.ownerSVGElement.height.animVal.value;
+	}
     var hash = function (i, j) {
         return ((i * 37) ^ (j * 1009)) % 17;
     }
@@ -321,9 +330,6 @@ function mkJigsaw(bgElt, pieceElts) {
 function init(evt) {
 	doc = evt.target.ownerDocument;
 	rootElt = doc.documentElement;
-	var docWd = rootElt.width.animVal.value;
-	var docHt = rootElt.height.animVal.value;
-	//rootElt.setAttribute('viewBox', '0 0 ' + docWd + ' ' + docHt);
 	var s = location.search;
 	var args = {
 	    u: 'http://farm5.static.flickr.com/4077/4871527376_35120786b3_z.jpg',
