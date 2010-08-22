@@ -25,12 +25,19 @@ $(document).ready(function () {
         e$.change(function () {updateSubmit($(this))});
     }
 */
+
+    var getJigsawSize = function () {
+        var em = $('#c a').height(); // SO TEMPTING to just write 13 here and be done with it.
+        return {
+            width: $(document).width(),
+            height: $(document).height() - 6 * em
+        };
+    }
     
     // this is the form that creates the jigsaw
     $('#f').submit(function (evt) {
-        var em = $('#c a').height();
-        var jigWd = $(document).width(),
-            jigHt = $(document).height() - 6 * em;
+        var jigSize = getJigsawSize();
+        var jigWd = jigSize.width, jigHt = jigSize.height;
         var imSrc = $('#u').val();
         var im = $('<img>').attr('src', imSrc);
         imElt = im.get(0);
@@ -72,46 +79,66 @@ $(document).ready(function () {
         evt.preventDefault();
     });
     
+    
+    var apiKey = '489c9667c5c8957340a78bacacb051d6';
+    var flickrCall = function (meth, args, func) {
+        $.extend(args, {
+            method: 'flickr.' + meth,
+            api_key: apiKey,
+            format: 'json'
+        });
+        return $.ajax({
+            url: 'http://api.flickr.com/services/rest/',
+            data: args,
+            dataType: 'jsonp',
+            jsonp: 'jsoncallback',
+            success: func
+        })
+    };
+    
     // This is the form that updates the image URL.
     $('#g').submit(function (evt) {
         var tags = $('#t').val();
         var perPage = 25;
-        var args = {
-            method: 'flickr.photos.search',
-            api_key: '489c9667c5c8957340a78bacacb051d6',
+        flickrCall('photos.search', {
             tags: tags.split().join(','),
             license: '1,2,4,5,7',
             sort: 'interestingness-desc',
             content_type: 1,
             media: 'photos',
             per_page: perPage,
-            extras: 'url_m,url_o,owner_name',
-            format: 'json'
-        }
-        var a = $.ajax({
-            url: 'http://api.flickr.com/services/rest/',
-            data: args,
-            dataType: 'jsonp',
-            jsonp: 'jsoncallback',
-            success: function (data, textStatus, req) {
-                var photoIndex = Math.floor(Math.random() * perPage);
-                var photo = data.photos.photo[photoIndex];
-                var imgSrc = (photo.width_o > 1024 || photo.height_o > 1024
-                    ? ('http://farm' + photo.farm + '.static.flickr.com/' 
-                        + photo.server + '/' + photo.id + '_' + photo.secret + '_b.jpg')
-                    : photo.url_o || photo.url_m);
-                $('#u').val(imgSrc);
-                var pElt = $('<p>').attr('id', 'c');
+            extras: 'owner_name'
+        }, function (data) {
+            // Choose a photo.
+            var photoIndex = Math.floor(Math.random() * perPage);
+            var photo = data.photos.photo[photoIndex];
+            // Now to find the size of the photo that fits best.
+            flickrCall('photos.getSizes', {photo_id: photo.id}, function (data) {
+                // Loop over sizes to get best fit.
+                var jigSize = getJigsawSize();
+                var jigWd = jigSize.width, jigHt = jigSize.height;        
+                var prev;
+                for (var i = 0; i < data.sizes.size.length; ++i) {
+                    var size = data.sizes.size[i];
+                    if (size.width > jigWd || size.height > jigHt) {
+                        break;
+                    }
+                    prev = size;
+                }
+                size = prev;
+                
+                $('#u').val(size.source);
+                var pElt = $('<p>');
                 var aElt = $('<a>')
                     .attr('href', 'http://www.flickr.com/photos/' + photo.owner + '/' + photo.id)
                     .text(photo.title + ' by ' + photo.ownername)
                     .appendTo(pElt);
-                $('#c').replaceWith(pElt);
+                $('#c').empty().append(pElt);
                 /*
                 updateSubmit($('#u'));
                 */
-            }
-        })
+            });
+        });
         evt.preventDefault();
     });
 });
