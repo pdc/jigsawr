@@ -1,6 +1,6 @@
 
 CLOSURIFY=tools/closurify
-DIST_DIR=10k/jigsaw
+DIST_DIR=10kjigsaw
 
 js_files=index.js jigsaw.js
 html_files=index.html
@@ -17,7 +17,7 @@ clean:
 	rm -f $(compressed_js_files)
 	rm -f $(compressed_html_files)
 	rm -f $(compressed_svg_files)
-	rm -f $(DIST_DIR)/*
+	rm -rf $(DIST_DIR) $(DIST_DIR).zip
 	
 dist: $(dist_files)
 	[ -d $(DIST_DIR) ] || mkdir $(DIST_DIR)
@@ -25,8 +25,8 @@ dist: $(dist_files)
 	for i in $(compressed_html_files); do cp $$i $(DIST_DIR)/$$(basename $$i .c.html).html; done
 	for i in $(compressed_svg_files); do cp $$i $(DIST_DIR)/$$(basename $$i .c.svg).svg; done
 	cp -p $(css_files) $(DIST_DIR)
-	wc $(DIST_DIR)/*
-	zip -9vr $(DIST_DIR) $(DIST_DIR)
+	wc $(DIST_DIR)/* | tee dist
+	zip -9vr $(DIST_DIR) $(DIST_DIR) -x $(DIST_DIR)/.DS_Store
 
 compressed_js: $(compressed_js_files)
 
