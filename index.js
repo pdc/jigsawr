@@ -147,4 +147,24 @@ $(document).ready(function () {
         var which = this.parentNode.id == 'dt' ? 'u' : 't';
         this.parentNode.parentNode.className = which;
     });
+    
+    // While we’re at it, let’s check the query string.
+    if (location.search) {
+        var args = {};
+        var kvs = location.search.substr(1).split('&');
+        for (var i in kvs) {
+            var kv = kvs[i];
+            var p = kv.indexOf('=');
+            args[unescape(kv.slice(0, p))] = unescape(kv.slice(p + 1));
+        }
+        for (var i in {d:1, u:1, t:1}) {
+            $('#' + i).val(args[i]);
+        }
+        if (args.u) {
+            $('#f').get(0).className = 'u';
+        }
+        if (args.j) {
+            $('#f').submit();
+        }
+    }
 });
