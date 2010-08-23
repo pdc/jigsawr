@@ -47,7 +47,7 @@ def get_closure_compiler_result(js_file, compilation_level=None, output_info=Non
         'output_info': output_info or 'compiled_code',
     }
     if compilation_level and compilation_level != 'SIMPLE_OPTIMIZATIONS':
-        params['compilation_level'] = level
+        params['compilation_level'] = compilation_level
     if output_format and output_format != 'text':
         params['output_format'] = output_format
     data = urllib.urlencode(params)
@@ -67,19 +67,22 @@ def main(argv=None):
         argv = sys.argv
     try:
         try:
-            opts, args = getopt.getopt(argv[1:], "hv", ["help",'verbose'])
+            opts, args = getopt.getopt(argv[1:], "hvO:", ["help",'verbose', 'optimizations=', 'optimize='])
         except getopt.error, msg:
             raise Usage(msg)
     
         # option processing
+        compilation_level = None
         for option, value in opts:
             if option in ['-v', '--verbose']:
                 verbose = True
             elif option in ("-h", "--help"):
                 raise Usage(help_message)
+            elif option in ['-O', '--optimize', '--optimizations=', '--optimizations']:
+                compilation_level = '%s_OPTIMIZATIONS' % value.upper()
                 
         for arg in args:
-            closurify(arg)
+            closurify(arg, compilation_level)
     
     except CouldNotCompile, err:
         print >> sys.stderr, err

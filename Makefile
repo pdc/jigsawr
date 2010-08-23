@@ -1,5 +1,6 @@
 
 CLOSURIFY=tools/closurify
+CLOSURIFY_ARGS=--optimize=SIMPLE
 DIST_DIR=10kjigsaw
 
 js_files=index.js jigsaw.js
@@ -42,7 +43,7 @@ compressed_svg: $(compressed_svg_files)
 compressed_css: $(compressed_css_files)
 
 %.c.js: %.js
-	$(CLOSURIFY) $<
+	$(CLOSURIFY) $(CLOSURIFY_ARGS) $<
 
 %.c.html: %.html
 	sed -e 's/^ *//' $< > $@
