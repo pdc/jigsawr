@@ -46,6 +46,10 @@ $(document).ready(function () {
     
     // Called once we know the image and its dimensions.
     var showJigsaw = function (src, wd, ht) {
+        if (3 * wd < jigWd && 2 * ht < jigHt) {
+            ht *= .5 * jigWd / wd;
+            wd = jigWd * .5;
+        }
         if (wd > jigWd) {
             ht *= jigWd / wd;
             wd = jigWd;
