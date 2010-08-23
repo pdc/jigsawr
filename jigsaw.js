@@ -1,11 +1,12 @@
-
+window.Jigsaw = (function () {
+    
 var SVG = 'http://www.w3.org/2000/svg';
 var XLINK = 'http://www.w3.org/1999/xlink';
 var doc = null;
 var rootElt = null;
 
 // Find an element by ID.
-function getElt(idOrElt) {
+var getElt = function (idOrElt) {
     if (idOrElt.getAttribute) {
         return idOrElt;
     }
@@ -13,7 +14,7 @@ function getElt(idOrElt) {
 }
 
 // Create an element with the given name and attributes.
-function mk(n, atts) {
+var mk = function (n, atts) {
     var e = document.createElementNS(SVG, n);
     if (atts) {
         for (var i in atts) {
@@ -28,7 +29,7 @@ function mk(n, atts) {
 }
 
 // Create an element and attach it to an existing one.
-function subelt(p, n, atts) {
+var subelt = function (p, n, atts) {
     e = mk(n, atts);
     p.appendChild(e);
     return e;
@@ -39,7 +40,7 @@ var logElt;
 var logTspans;
 var logLineHt = 16;
 var logMax = 600 / 16;
-function log(text) {
+var log = function (text) {
     if (logTspans == null) {
         logElt = subelt(getElt('bg'), 'text', {
             'font-height': logLineHt + 'px'
@@ -69,7 +70,7 @@ function log(text) {
 // Create the path for one bump on a jigsaw piece.
 // sideHt -- total length of the side (height of the piece). May be -ve.
 // isIn -- whether the bump turns intwards or points outwards
-function hBump(sideWd, isIn) {
+var hBump = function (sideWd, isIn) {
     var bwd = .4 * sideWd;
     var bht = .1 * sideWd * (!!isIn ^ (sideWd < 0) ? -1 : 1);
     var cht = .5 * bht;
@@ -91,7 +92,7 @@ function hBump(sideWd, isIn) {
 // Create the path for one bump on a jigsaw piece.
 // sideHt -- total length of the side (height of the piece). May be -ve.
 // isIn -- whether the bump turns intwards or points outwards
-function vBump(sideHt, isIn) {
+var vBump = function (sideHt, isIn) {
     var bht = .4 * sideHt;
     var bwd = .1 * sideHt * (!!isIn ^ (sideHt < 0) ? -1 : 1);
     var cwd = .5 * bwd;
@@ -110,7 +111,7 @@ function vBump(sideHt, isIn) {
     ];
 }
 
-function mkPieceElts(u, imWd, imHt, nh, nv) {
+var mkPieceElts = function (u, imWd, imHt, nh, nv) {
     var wd = imWd / nh;
     var ht = imHt / nv;
 	var hunks = [];
@@ -228,12 +229,12 @@ function mkPieceElts(u, imWd, imHt, nh, nv) {
 	return pieceElts;
 }
 
-function getPt(elt) {
+var getPt = function (elt) {
     var m = elt.getCTM();
     return {x: m.e, y: m.f};
 }
 
-function mkJigsaw(bgElt, pieceElts) {
+var mkJigsaw = function (bgElt, pieceElts) {
     bgElt = getElt(bgElt);
     var hunks = [];
     for (var i in pieceElts) {
@@ -326,8 +327,10 @@ function mkJigsaw(bgElt, pieceElts) {
     }
 }
 
+return {
+    
 // Called from main SVG element when document loaded.
-function init(evt) {
+init: function (evt) {
 	doc = evt.target.ownerDocument;
 	rootElt = doc.documentElement;
 	var s = location.search;
@@ -349,4 +352,7 @@ function init(evt) {
 	}
 	var pieceElts = mkPieceElts(args.u, args.wd, args.ht, args.nh, args.nv);
 	mkJigsaw('p', pieceElts);
+}
+
 };
+})();
