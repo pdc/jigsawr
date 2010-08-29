@@ -9,7 +9,7 @@ html {
     background-color: #573;
     background-image: -moz-linear-gradient(#573, #231); /* FF3.6 */
     background-image: -webkit-gradient(linear,left top,left bottom,from(#573),to(#231)); /* Saf4+, Chrome */
-    filter:  progid:DXImageTransform.Microsoft.gradient(startColorStr='#557733', EndColorStr='#336633'); /* IE6,IE7 */
+    /*filter:  progid:DXImageTransform.Microsoft.gradient(startColorStr='#557733', EndColorStr='#336633'); /* IE6,IE7 */
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#557733', EndColorStr='#336633')"; /* IE8 */
 
     font-family: "Verdana", sans-serif;
@@ -51,7 +51,7 @@ form {
     padding: 10px;
     width: 480px;
     background-color: #99AA85;
-    background: rgba(255, 255, 240, 0.5);
+    background-color: rgba(255, 255, 240, 0.5);
     border: 1px solid #ABC;
     -moz-border-radius: 1em; 
     -webkit-border-radius: 1em; 
