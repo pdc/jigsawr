@@ -3,7 +3,7 @@ if (arguments.length < 1 || !arguments[0]) {
     quit();
 }
 
-load('/Users/pdc/Projects/svg-jigsaw/tools/cssmin.js');
+load('/Users/pdc/Projects/jigsawr/tools/cssmin.js');
 
 var frags = [];
 for (var i = 0; i < arguments.length; ++i) {
