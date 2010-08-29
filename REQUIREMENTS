@@ -1,0 +1,4 @@
+cssutils==0.9.7b3
+distribute==0.6.10
+httplib2==0.6.0
+wsgiref==0.1.2

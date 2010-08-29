@@ -52,6 +52,6 @@ compressed_css: $(compressed_css_files)
 	sed -e 's/^ *//' $< > $@
 	
 %.c.css: %.css
-	jsc tools/cssmin_jsc.js -- "`cat $<`" > $@
+	cssparse -m $< >$@
 	
 .SUFFIX: .js
