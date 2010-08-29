@@ -27,7 +27,7 @@ ext_re = re.compile('(?:\.c)*\.js$')
 class CouldNotCompile(Exception): pass
 
 def closurify(js_file, compilation_level=None, output_info=None, output_format=None):
-    c_js_file = ext_re.sub('.c.js', js_file)
+    c_js_file = ext_re.sub('.min.js', js_file)
     if js_file == c_js_file:
         raise Usage('Output file would be the same as output file')
     result = get_closure_compiler_result(js_file, compilation_level, output_info, output_format)
