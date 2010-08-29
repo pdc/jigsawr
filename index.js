@@ -8,23 +8,6 @@ $(document).ready(function () {
             return '?' + ss.join('&');
         }
     }
-
-/*
-    // Disable submit buttons until argumenbts supplied.
-    var updateSubmit = function (elt$) {
-        var submit$ = elt$.nextAll('input');
-        if (elt$.val() == '') {
-            submit$.attr('disabled', 'disabled');
-        } else {
-            submit$.removeAttr('disabled');
-        }
-    }
-    for (var e in {t: 1, u: 1}) {
-        var e$ = $('#' + e);
-        updateSubmit(e$);
-        e$.change(function () {updateSubmit($(this))});
-    }
-*/
     
     var apiKey = '489c9667c5c8957340a78bacacb051d6';
     var flickrCall = function (meth, args, func) {
@@ -42,10 +25,13 @@ $(document).ready(function () {
         })
     };
     
-    var jigHt, jigWd;
+    var jigHt, 
+        jigWd,
+        recentSrc;
     
     // Called once we know the image and its dimensions.
     var showJigsaw = function (src, wd, ht) {
+        recentSrc = src;
         if (3 * wd < jigWd && 2 * ht < jigHt) {
             ht *= .5 * jigWd / wd;
             wd = jigWd * .5;
@@ -150,6 +136,9 @@ $(document).ready(function () {
     $('form a').click(function (evt) {
         var which = this.parentNode.id == 'dt' ? 'u' : 't';
         this.parentNode.parentNode.className = which;
+        if (which == 'u' && recentSrc && $('#u').val() == '') {
+            $('#u').val(recentSrc);
+        }
     });
     
     // While we’re at it, let’s check the query string.
