@@ -52,6 +52,6 @@ compressed_css: $(compressed_css_files)
 	sed -e 's/^ *//' $< > $@
 	
 %.min.css: %.css
-	cssparse -m $< >$@
+	cssparse -m $< >$@ 2>$<.log
 	
 .SUFFIX: .js

@@ -4,3 +4,4 @@ dist
 10kjigsaw
 out.html
 *.min.*
+*.log
