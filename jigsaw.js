@@ -130,10 +130,10 @@ var mkPieceElts = function (u, imWd, imHt, nh, nv) {
 	}
     var hash = function (i, j) {
         return ((i * 37) ^ (j * 1009)) % 17;
-    }
+    };
     var symbolElt = subelt(defsElt, 'symbol', {
         id: 'im'
-    })
+    });
     var imageElt = subelt(symbolElt, 'image', {
         href: u,
         width: imWd,
