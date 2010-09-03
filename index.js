@@ -9,6 +9,7 @@ $(document).ready(function () {
         }
     }
     
+    // If you host your own version of this app, you MUST change the API key.
     var apiKey = '489c9667c5c8957340a78bacacb051d6';
     var flickrCall = function (meth, args, func) {
         $.extend(args, {
