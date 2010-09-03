@@ -1,0 +1,80 @@
+#!/usr/bin/env python
+# encoding: utf-8
+"""
+jinjify.py
+
+Created by Damian Cugley on 2010-09-03.
+Copyright (c) 2010 __MyCompanyName__. All rights reserved.
+"""
+
+import os
+import sys
+import jinja2
+import codecs
+import markdown
+
+help_message = '''
+The help message goes here.
+'''
+
+def jinjify(markdown_file, template_file=None, template_dir='templates', out_file=None, env=None, is_verbose=False):
+    if env is None:
+        env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
+    expected_out_file = markdown_file.replace('.markdown', '.html')
+    if out_file is True:
+        out_file = expected_out_file
+    with codecs.open(markdown_file, 'rb', 'UTF-8') as input:
+        text = input.read()
+    html = markdown.markdown(text)
+    tp = env.get_or_select_template(template_file or [expected_out_file, os.path.basename(expected_out_file), os.path.dirname(expected_out_file) + '.html', 'default.html'])
+    data = tp.render(formatted_text=html).encode('UTF-8')
+    
+    strm = open(out_file, 'wb') if out_file else sys.stdout
+    strm.write(data)
+    if out_file:
+        strm.close()
+        
+    if is_verbose:
+        print >>sys.stderr, 'Wrote HTML to', (out_file or 'standard output')
+    
+    
+class Usage(Exception):
+    def __init__(self, msg):
+        self.msg = msg
+
+
+def main(argv=None):
+    import getopt
+    if argv is None:
+        argv = sys.argv
+    try:
+        try:
+            opts, args = getopt.getopt(argv[1:], "ho:vt:", ["help", "output=", 'template='])
+        except getopt.error, msg:
+            raise Usage(msg)
+    
+        # option processing
+        is_verbose = 0
+        template_file = None
+        out_file = None
+        for opt, arg in opts:
+            if opt == "-v":
+                is_verbose += 1
+            elif opt in ("-h", "--help"):
+                raise Usage(help_message)
+            elif opt in ("-o", "--output"):
+                out_file = arg
+            elif opt in ['-t', '--template']:
+                template_file = arg
+                
+        for arg in args:
+            jinjify(arg, template_file=None, out_file=(out_file or len(args) > 1))
+    
+    except Usage, err:
+        print >> sys.stderr, sys.argv[0].split("/")[-1] + ": " + str(err.msg)
+        print >> sys.stderr, "\t for help use --help"
+        return 2
+
+
+if __name__ == "__main__":
+    sys.exit(main())

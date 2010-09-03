@@ -1,6 +1,9 @@
 
 CLOSURIFY=tools/closurify
 CLOSURIFY_ARGS=--optimize=SIMPLE
+JINJIFY=tools/jinjify
+JINJIFY_ARGS=-ttemplates
+
 DIST_DIR=10kjigsaw
 
 js_files=index.js jigsaw.js
@@ -16,7 +19,10 @@ compressed_css_files=$(css_files:%.css=%.min.css)
 dist_files=$(compressed_js_files) $(compressed_html_files) \
 	$(compressed_svg_files) $(compressed_css_files) $(image_files)
 
-all: compressed_js compressed_html compressed_svg compressed_css
+markdown_files=about/index.markdown
+rendered_markdown_files=$(markdown_files:%.markdown=%.html)
+
+all: compressed_js compressed_html compressed_svg compressed_css rendered_markdown
 clean:
 	rm -f $(compressed_js_files)
 	rm -f $(compressed_html_files)
@@ -42,6 +48,8 @@ compressed_svg: $(compressed_svg_files)
 
 compressed_css: $(compressed_css_files)
 
+rendered_markdown: $(rendered_markdown_files)
+
 %.min.js: %.js
 	$(CLOSURIFY) $(CLOSURIFY_ARGS) $<
 
@@ -54,4 +62,5 @@ compressed_css: $(compressed_css_files)
 %.min.css: %.css
 	cssparse -m $< >$@ 2>$<.log
 	
-.SUFFIX: .js
+%.html: %.markdown templates/about.html
+	$(JINJIFY) $(JINJIFY_ARGS) -vo $@ $<
